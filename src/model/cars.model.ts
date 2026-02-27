@@ -4,7 +4,7 @@ export interface ICars extends Document {
     name : string;
     brand : string;
     model: string;
-    fuel: "petrol" | "disel" | "EV" ; 
+    fuel: "Petrol" | "Diesel" | "EV" ; 
     price : string;
     Publishdate : string; 
 }
