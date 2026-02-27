@@ -93,10 +93,15 @@ export const deleteCar = async (req: Request, res: Response) => {
   try {
     const car = await Car.findById(req.params.id);
     
-    /// delete cloudinary mathi image delete kare 
     if (car?.image) {
-      const publicId = car.image.split('/').slice(-2).join('/').split('.')[0];
-      await cloudinary.uploader.destroy(publicId);
+      try {
+        const urlParts = car.image.split('/');
+        const fileWithExt = urlParts[urlParts.length - 1];
+        const publicId = `cars/${fileWithExt.split('.')[0]}`;
+        await cloudinary.uploader.destroy(publicId);
+      } catch (deleteError) {
+        console.error("Error deleting image:", deleteError);
+      }
     }
     
     await Car.findByIdAndDelete(req.params.id);
@@ -120,10 +125,15 @@ export const updateCar = async (req: Request, res: Response) => {
     if (req.body.image && req.body.image.startsWith('data:')) {
       const car = await Car.findById(req.params.id);
       
-      /// delete cloudinary mathi image delete kare 
       if (car?.image) {
-        const publicId = car.image.split('/').slice(-2).join('/').split('.')[0];
-        await cloudinary.uploader.destroy(publicId);
+        try {
+          const urlParts = car.image.split('/');
+          const fileWithExt = urlParts[urlParts.length - 1];
+          const publicId = `cars/${fileWithExt.split('.')[0]}`;
+          await cloudinary.uploader.destroy(publicId);
+        } catch (deleteError) {
+          console.error("Error deleting old image:", deleteError);
+        }
       }
       
       const result = await cloudinary.uploader.upload(req.body.image, {
