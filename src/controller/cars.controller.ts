@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Car from "../model/cars.model";
+import cloudinary from "../config/cloudinary";
 
 
 export const createCar = async (req: Request, res: Response) => {
@@ -10,6 +11,16 @@ export const createCar = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
+    let imageUrl = "";
+    if (req.file) {
+      const b64 = Buffer.from(req.file.buffer).toString("base64");
+      const dataURI = `data:${req.file.mimetype};base64,${b64}`;
+      const result = await cloudinary.uploader.upload(dataURI, {
+        folder: "cars",
+      });
+      imageUrl = result.secure_url;
+    }
+
     const newCar = await Car.create({
       name,
       brand,
@@ -17,6 +28,7 @@ export const createCar = async (req: Request, res: Response) => {
       fuel,
       price,
       Publishdate,
+      image: imageUrl,
     });
 
     res.status(201).json(newCar);
@@ -89,9 +101,20 @@ export const deleteCar = async (req: Request, res: Response) => {
 
 export const updateCar = async (req: Request, res: Response) => {
   try {
+    let updateData = { ...req.body };
+
+    if (req.file) {
+      const b64 = Buffer.from(req.file.buffer).toString("base64");
+      const dataURI = `data:${req.file.mimetype};base64,${b64}`;
+      const result = await cloudinary.uploader.upload(dataURI, {
+        folder: "cars",
+      });
+      updateData.image = result.secure_url;
+    }
+
     const updatedCar = await Car.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      updateData,
       { new: true }
     );
 

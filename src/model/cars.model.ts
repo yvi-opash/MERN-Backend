@@ -6,7 +6,8 @@ export interface ICars extends Document {
     model: string;
     fuel: "Petrol" | "Diesel" | "EV" ; 
     price : string;
-    Publishdate : string; 
+    Publishdate : string;
+    image?: string;
 }
 
 
@@ -18,6 +19,7 @@ const CarSchema = new mongoose.Schema({
     fuel : {type: String, required : true, enum : ["Petrol", "Diesel", "EV"], default : "Diesel"},
     price : {type: String, required : true},
     Publishdate : {type: String, required : true},
+    image: { type: String },
 },{timestamps: true});
 
 export default mongoose.model<ICars>("Car", CarSchema); 
