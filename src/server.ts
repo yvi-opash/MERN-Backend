@@ -10,7 +10,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",                // local frontend (Vite)
-      "https://your-frontend.vercel.app"      // 🔁 change after frontend deploy
+      "https://mern-backend-h1lnm3dgr-yashs-projects-f85a8e07.vercel.app"      // 🔁 change after frontend deploy
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
