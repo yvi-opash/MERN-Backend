@@ -9,23 +9,24 @@ export default function CarForm() {
     price: '',
     Publishdate: '',
   });
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState('');
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setImage(reader.result);
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    const data = new FormData();
-    data.append('name', formData.name);
-    data.append('brand', formData.brand);
-    data.append('model', formData.model);
-    data.append('fuel', formData.fuel);
-    data.append('price', formData.price);
-    data.append('Publishdate', formData.Publishdate);
-    if (image) data.append('image', image);
-
     const res = await fetch('http://localhost:3000/api/cars', {
       method: 'POST',
-      body: data,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...formData, image }),
     });
     
     const result = await res.json();
@@ -74,7 +75,7 @@ export default function CarForm() {
       <input
         type="file"
         accept="image/*"
-        onChange={(e) => setImage(e.target.files[0])}
+        onChange={handleImageChange}
       />
       <button type="submit">Add Car</button>
     </form>
