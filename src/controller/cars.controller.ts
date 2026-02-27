@@ -5,17 +5,15 @@ import cloudinary from "../config/cloudinary";
 
 export const createCar = async (req: Request, res: Response) => {
   try {
-    const { name, brand, model, fuel, price, Publishdate } = req.body;
+    const { name, brand, model, fuel, price, Publishdate, image } = req.body;
 
     if (!name || !brand || !model || !fuel || !price || !Publishdate) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
     let imageUrl = "";
-    if (req.file) {
-      const b64 = Buffer.from(req.file.buffer).toString("base64");
-      const dataURI = `data:${req.file.mimetype};base64,${b64}`;
-      const result = await cloudinary.uploader.upload(dataURI, {
+    if (image) {
+      const result = await cloudinary.uploader.upload(image, {
         folder: "cars",
       });
       imageUrl = result.secure_url;
@@ -103,10 +101,8 @@ export const updateCar = async (req: Request, res: Response) => {
   try {
     let updateData = { ...req.body };
 
-    if (req.file) {
-      const b64 = Buffer.from(req.file.buffer).toString("base64");
-      const dataURI = `data:${req.file.mimetype};base64,${b64}`;
-      const result = await cloudinary.uploader.upload(dataURI, {
+    if (req.body.image && req.body.image.startsWith('data:')) {
+      const result = await cloudinary.uploader.upload(req.body.image, {
         folder: "cars",
       });
       updateData.image = result.secure_url;
