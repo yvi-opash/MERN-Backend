@@ -9,8 +9,8 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",                // local frontend (Vite)
-      "https://mern-backend-h1lnm3dgr-yashs-projects-f85a8e07.vercel.app"      // 🔁 change after frontend deploy
+      "http://localhost:5173",
+      "http://127.0.0.1:5173"
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
