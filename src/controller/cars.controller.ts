@@ -50,15 +50,15 @@ export const getallCar = async (req: Request, res: Response) => {
     const cars = await Car.find(query)
       .skip((page - 1) * limit)
       .limit(limit)
-      .sort({ createdAt: -1 });
+      
 
     const total = await Car.countDocuments(query);
 
     res.status(200).json({
       cars,
       total,
-      currentPage: page,
-      totalPages: Math.ceil(total / limit),
+      // currentPage: page,
+      // totalPages: Math.ceil(total / limit),
     });
   } catch (error: any) {
     console.error("GET ALL CARS ERROR:", error);
