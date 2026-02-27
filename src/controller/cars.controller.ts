@@ -57,8 +57,8 @@ export const getallCar = async (req: Request, res: Response) => {
     res.status(200).json({
       cars,
       total,
-      // currentPage: page,
-      // totalPages: Math.ceil(total / limit),
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
     });
   } catch (error: any) {
     console.error("GET ALL CARS ERROR:", error);
