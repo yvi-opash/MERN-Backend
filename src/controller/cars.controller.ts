@@ -48,7 +48,7 @@ export const getallCar = async (req: Request, res: Response) => {
       : {};
 
     const cars = await Car.find(query)
-      .skip((page - 1) * limit)
+      .skip(page * limit)
       .limit(limit)
       
 
