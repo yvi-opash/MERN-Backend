@@ -40,6 +40,10 @@ export const createCar = async (req: Request, res: Response) => {
 };
 
 
+
+
+
+
 export const getallCar = async (req: Request, res: Response) => {
   try {
     const page = parseInt(req.query.page as string) || 0;
@@ -81,14 +85,23 @@ export const getallCar = async (req: Request, res: Response) => {
 };
 
 
+
+
+
+
 export const deleteCar = async (req: Request, res: Response) => {
   try {
+    const car = await Car.findById(req.params.id);
+    
+    if (car?.image) {
+      const publicId = car.image.split('/').slice(-2).join('/').split('.')[0];
+      await cloudinary.uploader.destroy(publicId);
+    }
+    
     await Car.findByIdAndDelete(req.params.id);
-
     res.json({ message: "Car deleted successfully" });
   } catch (error: any) {
     console.error("DELETE CAR ERROR:", error);
-
     res.status(500).json({
       message: "Error deleting car",
       error: error.message,
@@ -97,11 +110,20 @@ export const deleteCar = async (req: Request, res: Response) => {
 };
 
 
+
+
 export const updateCar = async (req: Request, res: Response) => {
   try {
     let updateData = { ...req.body };
 
     if (req.body.image && req.body.image.startsWith('data:')) {
+      const car = await Car.findById(req.params.id);
+      
+      if (car?.image) {
+        const publicId = car.image.split('/').slice(-2).join('/').split('.')[0];
+        await cloudinary.uploader.destroy(publicId);
+      }
+      
       const result = await cloudinary.uploader.upload(req.body.image, {
         folder: "cars",
       });
