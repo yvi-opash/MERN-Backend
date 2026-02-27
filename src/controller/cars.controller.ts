@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Car from "../model/cars.model";
 
-/* ================= CREATE ================= */
+
 export const createCar = async (req: Request, res: Response) => {
   try {
     const { name, brand, model, fuel, price, Publishdate } = req.body;
@@ -29,7 +29,7 @@ export const createCar = async (req: Request, res: Response) => {
   }
 };
 
-/* ================= GET ALL ================= */
+
 export const getallCar = async (req: Request, res: Response) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
@@ -70,7 +70,7 @@ export const getallCar = async (req: Request, res: Response) => {
   }
 };
 
-/* ================= DELETE ================= */
+
 export const deleteCar = async (req: Request, res: Response) => {
   try {
     await Car.findByIdAndDelete(req.params.id);
@@ -86,7 +86,7 @@ export const deleteCar = async (req: Request, res: Response) => {
   }
 };
 
-/* ================= UPDATE ================= */
+
 export const updateCar = async (req: Request, res: Response) => {
   try {
     const updatedCar = await Car.findByIdAndUpdate(
