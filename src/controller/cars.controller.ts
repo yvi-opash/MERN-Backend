@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import Car from "../model/cars.model";
 import cloudinary from "../config/cloudinary";
-import logger from "../config/logger";
 
 
 export const createCar = async (req: Request, res: Response) => {
@@ -30,10 +29,9 @@ export const createCar = async (req: Request, res: Response) => {
       image: imageUrl,
     });
 
-    logger.info(`Car created: ${newCar.name}`);
     res.status(201).json(newCar);
   } catch (error: any) {
-    logger.error(`CREATE CAR ERROR: ${error.message}`);
+    console.error("CREATE CAR ERROR:", error);
     res.status(500).json({
       message: "Error creating car",
       error: error.message,
@@ -70,7 +68,6 @@ export const getallCar = async (req: Request, res: Response) => {
 
     const total = await Car.countDocuments(query);
 
-    logger.info(`Fetched ${cars.length} cars`);
     res.status(200).json({
       cars,
       total,
@@ -78,7 +75,7 @@ export const getallCar = async (req: Request, res: Response) => {
       totalPages: Math.ceil(total / limit),
     });
   } catch (error: any) {
-    logger.error(`GET ALL CARS ERROR: ${error.message}`);
+    console.error("GET ALL CARS ERROR:", error);
 
     res.status(500).json({
       message: "Error fetching cars",
@@ -104,15 +101,14 @@ export const deleteCar = async (req: Request, res: Response) => {
         const publicId = `cars/${fileWithExt.split('.')[0]}`;
         await cloudinary.uploader.destroy(publicId);
       } catch (deleteError) {
-        logger.error(`Error deleting image: ${deleteError}`);
+        console.error("Error deleting image:", deleteError);
       }
     }
     
     await Car.findByIdAndDelete(req.params.id);
-    logger.info(`Car deleted: ${req.params.id}`);
     res.json({ message: "Car deleted successfully" });
   } catch (error: any) {
-    logger.error(`DELETE CAR ERROR: ${error.message}`);
+    console.error("DELETE CAR ERROR:", error);
     res.status(500).json({
       message: "Error deleting car",
       error: error.message,
@@ -138,7 +134,7 @@ export const updateCar = async (req: Request, res: Response) => {
           const publicId = `cars/${fileWithExt.split('.')[0]}`;
           await cloudinary.uploader.destroy(publicId);
         } catch (deleteError) {
-          logger.error(`Error deleting old image: ${deleteError}`);
+          console.error("Error deleting old image:", deleteError);
         }
       }
       
@@ -154,10 +150,9 @@ export const updateCar = async (req: Request, res: Response) => {
       { new: true }
     );
 
-    logger.info(`Car updated: ${req.params.id}`);
     res.json(updatedCar);
   } catch (error: any) {
-    logger.error(`UPDATE CAR ERROR: ${error.message}`);
+    console.error("UPDATE CAR ERROR:", error);
 
     res.status(500).json({
       message: "Error updating car",
