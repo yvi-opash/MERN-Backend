@@ -1,10 +1,8 @@
 import express from "express";
 import cors from "cors";
-import { connectDB } from "./db";
 import carRoute from "./routes/cars.routes";
 
 const app = express();
-
 
 app.use(
   cors({
@@ -21,15 +19,10 @@ app.use(
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
-
-connectDB();
-
-
 app.get("/", (req, res) => {
   res.send("API is running");
 });
 
 app.use("/api/cars", carRoute);
-
 
 export default app;
