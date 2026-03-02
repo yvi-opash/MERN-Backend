@@ -1,6 +1,12 @@
 import app from "./server";
 import { connectDB } from "./db";
 
-connectDB();
+let dbConnected = false;
 
-export default app;
+export default async (req: any, res: any) => {
+  if (!dbConnected) {
+    await connectDB();
+    dbConnected = true;
+  }
+  return app(req, res);
+};
