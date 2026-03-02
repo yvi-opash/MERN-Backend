@@ -5,6 +5,7 @@ import carRoute from "./routes/cars.routes";
 
 const app = express();
 
+
 app.use(
   cors({
     origin: [
@@ -17,10 +18,12 @@ app.use(
   })
 );
 
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ limit: "50mb", extended: true }));
+
+app.use(express.json());
+
 
 connectDB();
+
 
 app.get("/", (req, res) => {
   res.send("API is running");
@@ -28,9 +31,5 @@ app.get("/", (req, res) => {
 
 app.use("/api/cars", carRoute);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
 
 export default app;
